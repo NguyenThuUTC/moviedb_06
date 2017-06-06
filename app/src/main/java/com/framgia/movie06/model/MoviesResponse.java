@@ -1,0 +1,21 @@
+package com.framgia.movie06.model;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+/**
+ * Created by admin on 6/7/2017.
+ */
+public class MoviesResponse {
+    @SerializedName("results")
+    private List<Movie> mResults;
+
+    public MoviesResponse(List<Movie> results) {
+        this.mResults = results;
+    }
+
+    public List<Movie> getResults() {
+        return mResults;
+    }
+}
