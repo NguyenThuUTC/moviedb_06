@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MovieDB</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="nav_favourite">Favourite movies</string>
+    <string name="nav_popular_movie">Popular movies</string>
+    <string name="nav_now_playing">Now playing movies</string>
+    <string name="nav_upcoming">Upcoming movies</string>
+    <string name="nav_top_rated_movie">Top rated movies</string>
+    <string name="nav_popular_tv">Popular TV shows</string>
+    <string name="nav_top_rated_tv">Top rated TV shows</string>
+    <string name="nav_the_air_tv">On the air TV shows</string>
+    <string name="menu_search">Search</string>
 </resources>
