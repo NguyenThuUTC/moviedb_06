@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MovieDB</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
@@ -13,4 +13,5 @@
     <string name="nav_top_rated_tv">Top rated TV shows</string>
     <string name="nav_the_air_tv">On the air TV shows</string>
     <string name="menu_search">Search</string>
+
 </resources>
