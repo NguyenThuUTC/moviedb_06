@@ -14,11 +14,14 @@ public interface MovieService {
     @GET("genre/movie/list")
     Call<GenresResponse> getGenres(@Query("api_key") String apiKey);
     @GET("movie/popular")
-    Call<MoviesResponse> getpopularMovies(@Query("api_key") String apiKey);
+    Call<MoviesResponse> getpopularMovies(@Query("api_key") String apiKey, @Query("page") int page);
     @GET("movie/upcoming")
-    Call<MoviesResponse> getUpcomingMovies(@Query("api_key") String apiKey);
+    Call<MoviesResponse> getUpcomingMovies(@Query("api_key") String apiKey,
+                                           @Query("page") int page);
     @GET("movie/now_playing")
-    Call<MoviesResponse> getNowPlayingMovies(@Query("api_key") String apiKey);
+    Call<MoviesResponse> getNowPlayingMovies(@Query("api_key") String apiKey,
+                                             @Query("page") int page);
     @GET("movie/top_rated")
-    Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey);
+    Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey,
+                                           @Query("page") int page);
 }
