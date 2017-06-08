@@ -17,8 +17,11 @@ import android.widget.Toast;
 
 import com.framgia.movie06.R;
 import com.framgia.movie06.adapter.MovieAdapter;
-import com.framgia.movie06.model.Movie;
-import com.framgia.movie06.model.MoviesResponse;
+import com.framgia.movie06.data.local.DatabaseHelper;
+import com.framgia.movie06.data.model.Genre;
+import com.framgia.movie06.data.model.GenresResponse;
+import com.framgia.movie06.data.model.Movie;
+import com.framgia.movie06.data.model.MoviesResponse;
 import com.framgia.movie06.service.Config;
 import com.framgia.movie06.service.MovieService;
 
@@ -47,6 +50,7 @@ public class HomeActivity extends AppCompatActivity
     private int mPage = 1;
     private int mTotalPage;
     public static final String LOAD_ERROR = "error";
+    private DatabaseHelper mDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void initViews() {
+        mDatabaseHelper = new DatabaseHelper(this);
         mRecyclerMovies = (RecyclerView) findViewById(R.id.recyclerview_detail);
         mRecyclerMovies.addOnItemTouchListener(this);
         mRetrofit = new Retrofit.Builder().baseUrl(Config.API_URL)
@@ -73,6 +78,10 @@ public class HomeActivity extends AppCompatActivity
             .build();
         mMovieService = mRetrofit.create(MovieService.class);
         mMovieList = new ArrayList<>();
+        List<Genre> l = mDatabaseHelper.getAllGenre();
+        if (mDatabaseHelper.getAllGenre() == null) {
+            insertDataForGenreTable();
+        }
         loadPopular(mPage);
         mMovieAdapter = new MovieAdapter(mMovieList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -81,6 +90,51 @@ public class HomeActivity extends AppCompatActivity
         mRecyclerMovies.setAdapter(mMovieAdapter);
         mRecyclerMovies.addOnItemTouchListener(this);
         mRecyclerMovies.setOnScrollListener(scrollRecyclerview);
+    }
+
+    private void insertDataForGenreTable() {
+        mMovieService.getGenres(Config.API_KEY).enqueue(new Callback<GenresResponse>() {
+            @Override
+            public void onResponse(Call<GenresResponse> call,
+                                   Response<GenresResponse> response) {
+                if (response == null || response.body() == null ||
+                    response.body().getGenreList() == null) {
+                    return;
+                }
+                for (Genre genre : response.body().getGenreList()) {
+                    if (mDatabaseHelper.getNameGenre(genre.getId()) != null) {
+                        continue;
+                    }
+                    mDatabaseHelper.insertData(genre);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenresResponse> call, Throwable throwable) {
+                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mMovieService.getGenresTV(Config.API_KEY).enqueue(new Callback<GenresResponse>() {
+            @Override
+            public void onResponse(Call<GenresResponse> call,
+                                   Response<GenresResponse> response) {
+                if (response == null || response.body() == null ||
+                    response.body().getGenreList() == null) {
+                    return;
+                }
+                for (Genre genre : response.body().getGenreList()) {
+                    if (mDatabaseHelper.getNameGenre(genre.getId()) != null) {
+                        continue;
+                    }
+                    mDatabaseHelper.insertData(genre);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenresResponse> call, Throwable throwable) {
+                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private RecyclerView.OnScrollListener scrollRecyclerview = new OnScrollListener() {
@@ -121,13 +175,13 @@ public class HomeActivity extends AppCompatActivity
             () {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                if(response.body()!=null){
-                    if (response.body().getResults() != null) {
-                        mMovieList.addAll(response.body().getResults());
-                        mTotalPage = response.body().getTotalPages();
-                        mMovieAdapter.notifyDataSetChanged();
-                    }
+                if (response == null || response.body() == null ||
+                    response.body().getResults() == null) {
+                    return;
                 }
+                mMovieList.addAll(response.body().getResults());
+                mTotalPage = response.body().getTotalPages();
+                mMovieAdapter.notifyDataSetChanged();
             }
 
             @Override

@@ -1,4 +1,4 @@
-package com.framgia.movie06.model;
+package com.framgia.movie06.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,6 +10,11 @@ public class Genre {
     private int mId;
     @SerializedName("name")
     private String mName;
+
+    public Genre(int id, String name) {
+        this.mId = id;
+        this.mName = name;
+    }
 
     public int getId() {
         return mId;

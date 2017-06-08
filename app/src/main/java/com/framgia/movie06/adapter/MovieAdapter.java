@@ -9,8 +9,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.framgia.movie06.R;
-import com.framgia.movie06.model.Genre;
-import com.framgia.movie06.model.Movie;
+import com.framgia.movie06.data.local.DatabaseHelper;
+import com.framgia.movie06.data.model.Movie;
 import com.framgia.movie06.service.Config;
 import com.squareup.picasso.Picasso;
 
@@ -22,6 +22,8 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerViewHolder> {
     private List<Movie> mListMovie;
     private LayoutInflater mLayoutInflater;
+    private DatabaseHelper mDatabaseHelper;
+    public static final String HYPHEN = "-";
 
     public MovieAdapter(List<Movie> listMovie) {
         this.mListMovie = listMovie;
@@ -37,12 +39,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
     @Override
     public void onBindViewHolder(RecyclerViewHolder recyclerViewHolder, int position) {
         Movie movie = mListMovie.get(position);
-        if (movie!=null){
+        if (movie != null) {
             recyclerViewHolder.bindData(movie);
         }
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -68,7 +68,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
         }
 
         private void bindData(Movie movie) {
-            Picasso.with(mLayoutInflater.getContext()).load(Config.POSTER_URL + movie.getPosterPath())
+            Picasso.with(mLayoutInflater.getContext())
+                .load(Config.POSTER_URL + movie.getPosterPath())
                 .into(mImagePoster);
             mTextTitle.setText(movie.getTitle());
             mTextReleaseDate.setText(movie.getReleaseDate());
@@ -76,6 +77,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
                 .getContext().getString(R.string.value_rating));
             mRatingVoteAverage
                 .setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
+            mDatabaseHelper = new DatabaseHelper(mLayoutInflater.getContext());
+            String textGenre = "";
+            if (movie.getGenreIds() != null) {
+                for (int id : movie.getGenreIds()) {
+                    textGenre += mDatabaseHelper.getNameGenre(id) + HYPHEN;
+                }
+                textGenre = textGenre.substring(0, textGenre.length() - 1);
+            }
+            if (textGenre.equals("")) {
+                mTextGenres.setVisibility(View.GONE);
+            } else {
+                mTextGenres.setVisibility(View.VISIBLE);
+                mTextGenres.setText(textGenre);
+            }
         }
     }
 }
