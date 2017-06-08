@@ -13,5 +13,5 @@
     <string name="nav_top_rated_tv">Top rated TV shows</string>
     <string name="nav_the_air_tv">On the air TV shows</string>
     <string name="menu_search">Search</string>
-
+    <string name="value_rating">&#47;10</string>
 </resources>

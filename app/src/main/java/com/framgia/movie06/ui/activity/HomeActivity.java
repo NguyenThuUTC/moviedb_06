@@ -6,18 +6,47 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.framgia.movie06.R;
+import com.framgia.movie06.adapter.MovieAdapter;
+import com.framgia.movie06.model.Movie;
+import com.framgia.movie06.model.MoviesResponse;
+import com.framgia.movie06.service.Config;
+import com.framgia.movie06.service.MovieService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener, RecyclerView.OnItemTouchListener {
     private DrawerLayout mDrawerLayout;
     private RecyclerView mRecyclerMovies;
+    private MovieAdapter mMovieAdapter;
+    private List<Movie> mMovieList;
+    private Retrofit mRetrofit;
+    private MovieService mMovieService;
+    private int mFeatureMovie;
+    public static final int POPULAR_MOVIE = 1;
+    public static final int UPCOMING_MOVIE = 2;
+    public static final int NOW_PLAYING_MOVIE = 3;
+    public static final int TOP_RATED_MOVIE = 4;
+    private int mPage = 1;
+    private int mTotalPage;
+    public static final String LOAD_ERROR = "error";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +68,73 @@ public class HomeActivity extends AppCompatActivity
     private void initViews() {
         mRecyclerMovies = (RecyclerView) findViewById(R.id.recyclerview_detail);
         mRecyclerMovies.addOnItemTouchListener(this);
+        mRetrofit = new Retrofit.Builder().baseUrl(Config.API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
+        mMovieService = mRetrofit.create(MovieService.class);
+        mMovieList = new ArrayList<>();
+        loadPopular(mPage);
+        mMovieAdapter = new MovieAdapter(mMovieList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerMovies.setLayoutManager(layoutManager);
+        mRecyclerMovies.setAdapter(mMovieAdapter);
+        mRecyclerMovies.addOnItemTouchListener(this);
+        mRecyclerMovies.setOnScrollListener(scrollRecyclerview);
+    }
+
+    private RecyclerView.OnScrollListener scrollRecyclerview = new OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            final LinearLayoutManager linearLayoutManager =
+                (LinearLayoutManager) mRecyclerMovies.getLayoutManager();
+            int visibleItemCount = linearLayoutManager.getChildCount();
+            int totalItemCount = linearLayoutManager.getItemCount();
+            int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+            if (mPage <= mTotalPage && (visibleItemCount + firstVisibleItemPosition) >=
+                totalItemCount && firstVisibleItemPosition >= 0) {
+                mPage++;
+                switch (mFeatureMovie) {
+                    case POPULAR_MOVIE:
+                        loadPopular(mPage);
+                        break;
+                    case UPCOMING_MOVIE:
+                        break;
+                    case NOW_PLAYING_MOVIE:
+                        break;
+                    case TOP_RATED_MOVIE:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
+
+    private void loadPopular(int page) {
+        mFeatureMovie = POPULAR_MOVIE;
+        mMovieService.getpopularMovies(Config.API_KEY, page).enqueue(new Callback<MoviesResponse>
+            () {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if(response.body()!=null){
+                    if (response.body().getResults() != null) {
+                        mMovieList.addAll(response.body().getResults());
+                        mTotalPage = response.body().getTotalPages();
+                        mMovieAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -74,18 +170,26 @@ public class HomeActivity extends AppCompatActivity
             case R.id.menu_favourite_movie:
                 break;
             case R.id.menu_popular_movie:
+                mPage = 1;
+                loadPopular(mPage);
                 break;
             case R.id.menu_now_playing_movie:
+                mPage = 1;
                 break;
             case R.id.menu_upcoming_movie:
+                mPage = 1;
                 break;
             case R.id.menu_top_rated_movie:
+                mPage = 1;
                 break;
             case R.id.menu_popular_tv:
+                mPage = 1;
                 break;
             case R.id.menu_top_rated_tv:
+                mPage = 1;
                 break;
             case R.id.menu_on_the_air_tv:
+                mPage = 1;
                 break;
             default:
                 break;

@@ -10,6 +10,8 @@ import java.util.List;
 public class MoviesResponse {
     @SerializedName("results")
     private List<Movie> mResults;
+    @SerializedName("total_pages")
+    private int mTotalPages;
 
     public MoviesResponse(List<Movie> results) {
         this.mResults = results;
@@ -17,5 +19,9 @@ public class MoviesResponse {
 
     public List<Movie> getResults() {
         return mResults;
+    }
+
+    public int getTotalPages() {
+        return mTotalPages;
     }
 }
