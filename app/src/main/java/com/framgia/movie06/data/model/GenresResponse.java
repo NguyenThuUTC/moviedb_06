@@ -1,4 +1,4 @@
-package com.framgia.movie06.model;
+package com.framgia.movie06.data.model;
 
 import com.google.gson.annotations.SerializedName;
 

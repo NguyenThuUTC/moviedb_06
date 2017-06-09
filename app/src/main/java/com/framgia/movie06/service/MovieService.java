@@ -1,7 +1,7 @@
 package com.framgia.movie06.service;
 
-import com.framgia.movie06.model.GenresResponse;
-import com.framgia.movie06.model.MoviesResponse;
+import com.framgia.movie06.data.model.GenresResponse;
+import com.framgia.movie06.data.model.MoviesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,6 +13,8 @@ import retrofit2.http.Query;
 public interface MovieService {
     @GET("genre/movie/list")
     Call<GenresResponse> getGenres(@Query("api_key") String apiKey);
+    @GET("genre/tv/list")
+    Call<GenresResponse> getGenresTV(@Query("api_key") String apiKey);
     @GET("movie/popular")
     Call<MoviesResponse> getpopularMovies(@Query("api_key") String apiKey, @Query("page") int page);
     @GET("movie/upcoming")
