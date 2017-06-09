@@ -79,7 +79,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
                 .setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
             mDatabaseHelper = new DatabaseHelper(mLayoutInflater.getContext());
             String textGenre = "";
-            if (movie.getGenreIds() != null) {
+            if (movie.getGenreIds() != null && movie.getGenreIds().length > 0) {
                 for (int id : movie.getGenreIds()) {
                     textGenre += mDatabaseHelper.getNameGenre(id) + HYPHEN;
                 }

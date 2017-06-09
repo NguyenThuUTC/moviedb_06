@@ -26,4 +26,13 @@ public interface MovieService {
     @GET("movie/top_rated")
     Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey,
                                            @Query("page") int page);
+    @GET("tv/popular")
+    Call<MoviesResponse> getPopularTV(@Query("api_key") String apiKey,
+                                      @Query("page") int page);
+    @GET("tv/top_rated")
+    Call<MoviesResponse> getTopRatedTV(@Query("api_key") String apiKey,
+                                       @Query("page") int page);
+    @GET("tv/on_the_air")
+    Call<MoviesResponse> getTheAirTV(@Query("api_key") String apiKey,
+                                     @Query("page") int page);
 }
