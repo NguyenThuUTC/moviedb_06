@@ -114,27 +114,28 @@ public class HomeActivity extends AppCompatActivity
                 Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
             }
         });
-        mMovieService.getGenresTV(Config.API_KEY).enqueue(new Callback<GenresResponse>() {
-            @Override
-            public void onResponse(Call<GenresResponse> call,
-                                   Response<GenresResponse> response) {
-                if (response == null || response.body() == null ||
-                    response.body().getGenreList() == null) {
-                    return;
-                }
-                for (Genre genre : response.body().getGenreList()) {
-                    if (mDatabaseHelper.getNameGenre(genre.getId()) != null) {
-                        continue;
+        mMovieService.getGenresTV(Config.API_KEY)
+            .enqueue(new Callback<GenresResponse>() {
+                @Override
+                public void onResponse(Call<GenresResponse> call,
+                                       Response<GenresResponse> response) {
+                    if (response == null || response.body() == null ||
+                        response.body().getGenreList() == null) {
+                        return;
                     }
-                    mDatabaseHelper.insertData(genre);
+                    for (Genre genre : response.body().getGenreList()) {
+                        if (mDatabaseHelper.getNameGenre(genre.getId()) != null) {
+                            continue;
+                        }
+                        mDatabaseHelper.insertData(genre);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<GenresResponse> call, Throwable throwable) {
-                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<GenresResponse> call, Throwable throwable) {
+                    Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private RecyclerView.OnScrollListener scrollRecyclerview = new OnScrollListener() {
@@ -149,18 +150,22 @@ public class HomeActivity extends AppCompatActivity
             int visibleItemCount = linearLayoutManager.getChildCount();
             int totalItemCount = linearLayoutManager.getItemCount();
             int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-            if (mPage <= mTotalPage && (visibleItemCount + firstVisibleItemPosition) >=
-                totalItemCount && firstVisibleItemPosition >= 0) {
+            if (mPage <= mTotalPage
+                && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                && firstVisibleItemPosition >= 0) {
                 mPage++;
                 switch (mFeatureMovie) {
                     case POPULAR_MOVIE:
                         loadPopular(mPage);
                         break;
                     case UPCOMING_MOVIE:
+                        loadUpComing(mPage);
                         break;
                     case NOW_PLAYING_MOVIE:
+                        loadNowPlaying(mPage);
                         break;
                     case TOP_RATED_MOVIE:
+                        loadTopRated(mPage);
                         break;
                     default:
                         break;
@@ -189,6 +194,70 @@ public class HomeActivity extends AppCompatActivity
                 Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadNowPlaying(int page) {
+        mMovieService.getNowPlayingMovies(Config.API_KEY, page).enqueue(new Callback<MoviesResponse>
+            () {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response == null || response.body() == null ||
+                    response.body().getResults() == null) {
+                    return;
+                }
+                mMovieList.addAll(response.body().getResults());
+                mTotalPage = response.body().getTotalPages();
+                mMovieAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadUpComing(int page) {
+        mMovieService.getUpcomingMovies(Config.API_KEY, page).enqueue(new Callback<MoviesResponse>
+            () {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response == null || response.body() == null ||
+                    response.body().getResults() == null) {
+                    return;
+                }
+                mMovieList.addAll(response.body().getResults());
+                mTotalPage = response.body().getTotalPages();
+                mMovieAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadTopRated(int page) {
+        mMovieService.getTopRatedMovies(Config.API_KEY, page).
+            enqueue(new Callback<MoviesResponse>() {
+                @Override
+                public void onResponse(Call<MoviesResponse> call,
+                                       Response<MoviesResponse> response) {
+                    if (response == null || response.body() == null ||
+                        response.body().getResults() == null) {
+                        return;
+                    }
+                    mMovieList.addAll(response.body().getResults());
+                    mTotalPage = response.body().getTotalPages();
+                    mMovieAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                    Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     @Override
@@ -224,17 +293,32 @@ public class HomeActivity extends AppCompatActivity
             case R.id.menu_favourite_movie:
                 break;
             case R.id.menu_popular_movie:
+                mFeatureMovie = POPULAR_MOVIE;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
                 loadPopular(mPage);
                 break;
             case R.id.menu_now_playing_movie:
+                mFeatureMovie = NOW_PLAYING_MOVIE;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadNowPlaying(mPage);
                 break;
             case R.id.menu_upcoming_movie:
+                mFeatureMovie = UPCOMING_MOVIE;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadNowPlaying(mPage);
                 break;
             case R.id.menu_top_rated_movie:
+                mFeatureMovie = TOP_RATED_MOVIE;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadTopRated(mPage);
                 break;
             case R.id.menu_popular_tv:
                 mPage = 1;
