@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerMovies.setLayoutManager(layoutManager);
         mRecyclerMovies.setAdapter(mMovieAdapter);
-        mRecyclerMovies.setOnScrollListener(scrollRecyclerview);
+        mRecyclerMovies.setOnScrollListener(mScrollRecyclerMovie);
     }
 
     private void insertDataForGenreTable() {
@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity
         });
     }
 
-    private RecyclerView.OnScrollListener scrollRecyclerview = new OnScrollListener() {
+    private RecyclerView.OnScrollListener mScrollRecyclerMovie = new OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         }
