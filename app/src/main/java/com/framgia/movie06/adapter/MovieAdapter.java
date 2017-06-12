@@ -14,14 +14,18 @@ import com.framgia.movie06.service.Config;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
+import static com.framgia.movie06.Constants.Constant.HYPHEN;
+import static com.framgia.movie06.Constants.Constant.MAXIMUM_VOTE_POINT;
+import static com.framgia.movie06.Constants.Constant.SLASH;
+
 /**
  * Created by admin on 6/7/2017.
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerViewHolder> {
+    private OnItemClickListener mOnItemClickListener;
     private List<Movie> mListMovie;
     private LayoutInflater mLayoutInflater;
     private DatabaseHelper mDatabaseHelper;
-    public static final String HYPHEN = "-";
 
     public MovieAdapter(List<Movie> listMovie) {
         this.mListMovie = listMovie;
@@ -47,7 +51,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
         return mListMovie == null ? 0 : mListMovie.size();
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
         private ImageView mImagePoster;
         private TextView mTextTitle;
         private TextView mTextGenres;
@@ -63,28 +68,30 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
             mTextReleaseDate = (TextView) itemView.findViewById(R.id.text_release_date);
             mTextVoteAverage = (TextView) itemView.findViewById(R.id.text_vote_average);
             mRatingVoteAverage = (RatingBar) itemView.findViewById(R.id.rating_vote_average);
+            itemView.setOnClickListener(this);
         }
 
         private void bindData(Movie movie) {
-            if (movie.getPosterPath() != null) {
-                Picasso.with(mLayoutInflater.getContext())
-                        .load(Config.POSTER_URL + movie.getPosterPath())
-                        .into(mImagePoster);
-            } else {
-                mImagePoster.setImageResource(R.drawable.no_image);
-            }
+            Picasso.with(mLayoutInflater.getContext())
+                    .load(Config.POSTER_URL + movie.getPosterPath())
+                    .error(R.drawable.no_image)
+                    .into(mImagePoster);
+
             String title = movie.getTitle() != null ? movie.getTitle()
                     : movie.getName() != null ? movie.getName() : null;
             mTextTitle.setText(title != null ? title : "");
             mTextTitle.setVisibility(title != null ? View.VISIBLE : View.GONE);
+
             String date = movie.getReleaseDate() != null ? movie.getReleaseDate()
                     : movie.getFirstAirDate() != null ? movie.getFirstAirDate() : null;
             mTextReleaseDate.setText(date != null ? date : "");
             mTextReleaseDate.setVisibility(date != null ? View.VISIBLE : View.GONE);
-            mTextVoteAverage.setText(movie.getVoteAverage() + mLayoutInflater.getContext()
-                    .getString(R.string.value_rating));
+
+            mTextVoteAverage.setText(movie.getVoteAverage() + SLASH + MAXIMUM_VOTE_POINT);
+
             mRatingVoteAverage.setRating(movie.getVoteAverage());
             mDatabaseHelper = new DatabaseHelper(mLayoutInflater.getContext());
+
             String textGenre = "";
             if (movie.getGenreIds() != null && movie.getGenreIds().length > 0) {
                 for (int id : movie.getGenreIds()) {
@@ -99,5 +106,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
                 mTextGenres.setText(textGenre);
             }
         }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnItemClickListener != null) {
+                mOnItemClickListener.onItemClick(getAdapterPosition(), v,
+                        mListMovie.get(getAdapterPosition()), mTextGenres.getText().toString());
+            }
+        }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener clickListener) {
+        mOnItemClickListener = clickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position, View v, Movie movie, String genres);
     }
 }

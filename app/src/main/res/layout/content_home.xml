@@ -6,4 +6,5 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/activity_recyclerview_margin"
     android:background="@color/color_indigo_50"
+    android:clickable="true"
     />

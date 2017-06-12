@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import com.framgia.movie06.R;
 import com.framgia.movie06.adapter.MovieAdapter;
@@ -31,15 +32,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.framgia.movie06.Constants.Constant.LOAD_ERROR;
+
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    private DrawerLayout mDrawerLayout;
-    private RecyclerView mRecyclerMovies;
-    private MovieAdapter mMovieAdapter;
-    private List<Movie> mMovieList;
-    private Retrofit mRetrofit;
-    private MovieService mMovieService;
-    private int mFeatureMovie;
+        implements NavigationView.OnNavigationItemSelectedListener,
+        MovieAdapter.OnItemClickListener {
     public static final int POPULAR_MOVIE = 1;
     public static final int UPCOMING_MOVIE = 2;
     public static final int NOW_PLAYING_MOVIE = 3;
@@ -47,9 +44,15 @@ public class HomeActivity extends AppCompatActivity
     public static final int POPULAR_TV = 5;
     public static final int TOP_RATED_TV = 6;
     public static final int ON_THE_AIR_TV = 7;
+    private DrawerLayout mDrawerLayout;
+    private RecyclerView mRecyclerMovies;
+    private MovieAdapter mMovieAdapter;
+    private List<Movie> mMovieList;
+    private Retrofit mRetrofit;
+    private MovieService mMovieService;
+    private int mFeatureMovie;
     private int mPage = 1;
     private int mTotalPage;
-    public static final String LOAD_ERROR = "error";
     private DatabaseHelper mDatabaseHelper;
 
     @Override
@@ -87,6 +90,7 @@ public class HomeActivity extends AppCompatActivity
         mRecyclerMovies.setLayoutManager(layoutManager);
         mRecyclerMovies.setAdapter(mMovieAdapter);
         mRecyclerMovies.setOnScrollListener(mScrollRecyclerMovie);
+        mMovieAdapter.setOnItemClickListener(this);
     }
 
     private void insertDataForGenreTable() {
@@ -314,5 +318,10 @@ public class HomeActivity extends AppCompatActivity
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onItemClick(int position, View v, Movie movie, String genres) {
+        startActivity(DetailActivity.getInstance(HomeActivity.this, movie, genres));
     }
 }
