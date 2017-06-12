@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.framgia.movie06.R;
 import com.framgia.movie06.data.local.DatabaseHelper;
 import com.framgia.movie06.data.model.Movie;
 import com.framgia.movie06.service.Config;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 /**
@@ -70,22 +68,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
         private void bindData(Movie movie) {
             if (movie.getPosterPath() != null) {
                 Picasso.with(mLayoutInflater.getContext())
-                    .load(Config.POSTER_URL + movie.getPosterPath())
-                    .into(mImagePoster);
+                        .load(Config.POSTER_URL + movie.getPosterPath())
+                        .into(mImagePoster);
             } else {
                 mImagePoster.setImageResource(R.drawable.no_image);
             }
             String title = movie.getTitle() != null ? movie.getTitle()
-                : movie.getName() != null ? movie.getName() : null;
+                    : movie.getName() != null ? movie.getName() : null;
             mTextTitle.setText(title != null ? title : "");
             mTextTitle.setVisibility(title != null ? View.VISIBLE : View.GONE);
-            String date =
-                movie.getReleaseDate() != null ? movie.getReleaseDate() :
-                    movie.getFirstAirDate() != null ? movie.getFirstAirDate() : null;
+            String date = movie.getReleaseDate() != null ? movie.getReleaseDate()
+                    : movie.getFirstAirDate() != null ? movie.getFirstAirDate() : null;
             mTextReleaseDate.setText(date != null ? date : "");
             mTextReleaseDate.setVisibility(date != null ? View.VISIBLE : View.GONE);
-            mTextVoteAverage.setText(movie.getVoteAverage()
-                + mLayoutInflater.getContext().getString(R.string.value_rating));
+            mTextVoteAverage.setText(movie.getVoteAverage() + mLayoutInflater.getContext()
+                    .getString(R.string.value_rating));
             mRatingVoteAverage.setRating(movie.getVoteAverage());
             mDatabaseHelper = new DatabaseHelper(mLayoutInflater.getContext());
             String textGenre = "";

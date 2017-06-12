@@ -63,8 +63,8 @@ public class Movie implements Serializable {
         return mVoteAverage;
     }
 
-    public void setVoteAverage(float mVoteAverage) {
-        this.mVoteAverage = mVoteAverage;
+    public void setVoteAverage(float voteAverage) {
+        mVoteAverage = voteAverage;
     }
 
     public String getFirstAirDate() {
