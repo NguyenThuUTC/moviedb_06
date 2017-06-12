@@ -14,4 +14,7 @@
     <string name="nav_the_air_tv">On the air TV shows</string>
     <string name="menu_search">Search</string>
     <string name="value_rating">&#47;10</string>
+    <string name="search_history">Search history</string>
+    <string name="trailer">Trailer</string>
+    <string name="no_trailer_result">The movie have no trailer </string>
 </resources>

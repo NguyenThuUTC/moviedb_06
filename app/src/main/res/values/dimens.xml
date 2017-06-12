@@ -7,4 +7,19 @@
     <dimen name="height_image">145dp</dimen>
     <dimen name="rating_vote_average">70dp</dimen>
     <dimen name="unuse_width">0dp</dimen>
+    <dimen name="activity_recyclerview_margin">48dp</dimen>
+    <dimen name="margin_item_recyclerview">32dp</dimen>
+    <dimen name="margin_top_item_recyclerview">32dp</dimen>
+    <dimen name="height_toolbar">60dp</dimen>
+    <dimen name="height_item_toolbar">40dp</dimen>
+    <dimen name="height_image_search">30dp</dimen>
+    <dimen name="size_text_history">20sp</dimen>
+    <dimen name="padding_text">8dp</dimen>
+    <dimen name="padding_item_reclerview">8dp</dimen>
+    <dimen name="size_text_title">20sp</dimen>
+    <dimen name="height_item_recyclerview_cast">50dp</dimen>
+    <dimen name="height_item_recyclerview_trailer">50dp</dimen>
+    <dimen name="margin_top_item_cast">16dp</dimen>
+    <dimen name="height_image_youtube">50dp</dimen>
+    <dimen name="youtube_trailer">20dp</dimen>
 </resources>
