@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.framgia.movie06.data.model.Genre;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     public static final String COMMAND_DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_GENRE;
     public static final String COMMAND_CREATE_TABLE = "CREATE TABLE " + TABLE_GENRE + "(" +
-        COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT)";
+            COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT)";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,9 +57,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Genre> results = null;
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-            Cursor cursor = sqLiteDatabase.query(TABLE_GENRE,
-                new String[]{COLUMN_ID, COLUMN_NAME},
-                null, null, null, null, null, null);
+            Cursor cursor =
+                    sqLiteDatabase.query(TABLE_GENRE, new String[] { COLUMN_ID, COLUMN_NAME }, null,
+                            null, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 results = new ArrayList<>();
                 do {
@@ -84,10 +82,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
             String selection = COLUMN_ID + "=?";
-            String[] selectionArgs = new String[]{String.valueOf(idGenre)};
-            Cursor cursor = sqLiteDatabase.query(TABLE_GENRE,
-                new String[]{COLUMN_ID, COLUMN_NAME},
-                selection, selectionArgs, null, null, null, null);
+            String[] selectionArgs = new String[] { String.valueOf(idGenre) };
+            Cursor cursor =
+                    sqLiteDatabase.query(TABLE_GENRE, new String[] { COLUMN_ID, COLUMN_NAME },
+                            selection, selectionArgs, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
                 result = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
                 cursor.close();
