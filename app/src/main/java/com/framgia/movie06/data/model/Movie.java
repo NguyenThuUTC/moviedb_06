@@ -10,10 +10,14 @@ public class Movie {
     private int mId;
     @SerializedName("title")
     private String mTitle;
+    @SerializedName("name")
+    private String mName;
     @SerializedName("poster_path")
     private String mPosterPath;
     @SerializedName("release_date")
     private String mReleaseDate;
+    @SerializedName("first_air_date")
+    private String mFirstAirDate;
     @SerializedName("genre_ids")
     private int[] mGenreIds;
     @SerializedName("vote_average")
@@ -25,6 +29,10 @@ public class Movie {
 
     public String getTitle() {
         return mTitle;
+    }
+
+    public String getName() {
+        return mName;
     }
 
     public String getPosterPath() {
@@ -41,5 +49,9 @@ public class Movie {
 
     public String getVoteAverage() {
         return mVoteAverage;
+    }
+
+    public String getFirstAirDate() {
+        return mFirstAirDate;
     }
 }

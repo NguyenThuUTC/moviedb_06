@@ -71,8 +71,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
             Picasso.with(mLayoutInflater.getContext())
                 .load(Config.POSTER_URL + movie.getPosterPath())
                 .into(mImagePoster);
-            mTextTitle.setText(movie.getTitle());
-            mTextReleaseDate.setText(movie.getReleaseDate());
+            if (movie.getTitle() != null) {
+                mTextTitle.setText(movie.getTitle());
+            } else {
+                mTextTitle.setText(movie.getName());
+            }
+            if (movie.getReleaseDate() != null) {
+                mTextReleaseDate.setText(movie.getReleaseDate());
+            } else {
+                mTextReleaseDate.setText(movie.getFirstAirDate());
+            }
             mTextVoteAverage.setText(movie.getVoteAverage() + mLayoutInflater
                 .getContext().getString(R.string.value_rating));
             mRatingVoteAverage

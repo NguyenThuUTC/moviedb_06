@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.framgia.movie06.R;
@@ -35,7 +34,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity
-    implements NavigationView.OnNavigationItemSelectedListener, RecyclerView.OnItemTouchListener {
+    implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
     private RecyclerView mRecyclerMovies;
     private MovieAdapter mMovieAdapter;
@@ -47,6 +46,9 @@ public class HomeActivity extends AppCompatActivity
     public static final int UPCOMING_MOVIE = 2;
     public static final int NOW_PLAYING_MOVIE = 3;
     public static final int TOP_RATED_MOVIE = 4;
+    public static final int POPULAR_TV = 5;
+    public static final int TOP_RATED_TV = 6;
+    public static final int ON_THE_AIR_TV = 7;
     private int mPage = 1;
     private int mTotalPage;
     public static final String LOAD_ERROR = "error";
@@ -72,7 +74,6 @@ public class HomeActivity extends AppCompatActivity
     private void initViews() {
         mDatabaseHelper = new DatabaseHelper(this);
         mRecyclerMovies = (RecyclerView) findViewById(R.id.recyclerview_detail);
-        mRecyclerMovies.addOnItemTouchListener(this);
         mRetrofit = new Retrofit.Builder().baseUrl(Config.API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
@@ -88,15 +89,13 @@ public class HomeActivity extends AppCompatActivity
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerMovies.setLayoutManager(layoutManager);
         mRecyclerMovies.setAdapter(mMovieAdapter);
-        mRecyclerMovies.addOnItemTouchListener(this);
         mRecyclerMovies.setOnScrollListener(scrollRecyclerview);
     }
 
     private void insertDataForGenreTable() {
         mMovieService.getGenres(Config.API_KEY).enqueue(new Callback<GenresResponse>() {
             @Override
-            public void onResponse(Call<GenresResponse> call,
-                                   Response<GenresResponse> response) {
+            public void onResponse(Call<GenresResponse> call, Response<GenresResponse> response) {
                 if (response == null || response.body() == null ||
                     response.body().getGenreList() == null) {
                     return;
@@ -167,6 +166,15 @@ public class HomeActivity extends AppCompatActivity
                     case TOP_RATED_MOVIE:
                         loadTopRated(mPage);
                         break;
+                    case POPULAR_TV:
+                        loadPopularTV(mPage);
+                        break;
+                    case TOP_RATED_TV:
+                        loadTopRatedTV(mPage);
+                        break;
+                    case ON_THE_AIR_TV:
+                        loadTheAirTV(mPage);
+                        break;
                     default:
                         break;
                 }
@@ -176,50 +184,20 @@ public class HomeActivity extends AppCompatActivity
 
     private void loadPopular(int page) {
         mFeatureMovie = POPULAR_MOVIE;
-        mMovieService.getpopularMovies(Config.API_KEY, page).enqueue(new Callback<MoviesResponse>
-            () {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                if (response == null || response.body() == null ||
-                    response.body().getResults() == null) {
-                    return;
-                }
-                mMovieList.addAll(response.body().getResults());
-                mTotalPage = response.body().getTotalPages();
-                mMovieAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
-            }
-        });
+        mMovieService.getpopularMovies(Config.API_KEY, page)
+            .enqueue(mDataCallBack());
     }
 
     private void loadNowPlaying(int page) {
-        mMovieService.getNowPlayingMovies(Config.API_KEY, page).enqueue(new Callback<MoviesResponse>
-            () {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                if (response == null || response.body() == null ||
-                    response.body().getResults() == null) {
-                    return;
-                }
-                mMovieList.addAll(response.body().getResults());
-                mTotalPage = response.body().getTotalPages();
-                mMovieAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
-            }
-        });
+        mMovieService.getNowPlayingMovies(Config.API_KEY, page).enqueue(mDataCallBack());
     }
 
     private void loadUpComing(int page) {
-        mMovieService.getUpcomingMovies(Config.API_KEY, page).enqueue(new Callback<MoviesResponse>
-            () {
+        mMovieService.getUpcomingMovies(Config.API_KEY, page).enqueue(mDataCallBack());
+    }
+
+    private Callback<MoviesResponse> mDataCallBack () {
+        Callback<MoviesResponse> moviesResponseCallback = new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 if (response == null || response.body() == null ||
@@ -232,32 +210,27 @@ public class HomeActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+            public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
                 Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        return moviesResponseCallback;
     }
 
     private void loadTopRated(int page) {
-        mMovieService.getTopRatedMovies(Config.API_KEY, page).
-            enqueue(new Callback<MoviesResponse>() {
-                @Override
-                public void onResponse(Call<MoviesResponse> call,
-                                       Response<MoviesResponse> response) {
-                    if (response == null || response.body() == null ||
-                        response.body().getResults() == null) {
-                        return;
-                    }
-                    mMovieList.addAll(response.body().getResults());
-                    mTotalPage = response.body().getTotalPages();
-                    mMovieAdapter.notifyDataSetChanged();
-                }
+        mMovieService.getTopRatedMovies(Config.API_KEY, page).enqueue(mDataCallBack());
+    }
 
-                @Override
-                public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                    Toast.makeText(HomeActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
-                }
-            });
+    private void loadPopularTV(int page) {
+        mMovieService.getPopularTV(Config.API_KEY, page).enqueue(mDataCallBack());
+    }
+
+    private void loadTopRatedTV(int page) {
+        mMovieService.getTopRatedTV(Config.API_KEY, page).enqueue(mDataCallBack());
+    }
+
+    private void loadTheAirTV(int page) {
+        mMovieService.getTheAirTV(Config.API_KEY, page).enqueue(mDataCallBack());
     }
 
     @Override
@@ -321,32 +294,30 @@ public class HomeActivity extends AppCompatActivity
                 loadTopRated(mPage);
                 break;
             case R.id.menu_popular_tv:
+                mFeatureMovie = POPULAR_TV;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadPopularTV(mPage);
                 break;
             case R.id.menu_top_rated_tv:
+                mFeatureMovie = TOP_RATED_TV;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadTopRatedTV(mPage);
                 break;
             case R.id.menu_on_the_air_tv:
+                mFeatureMovie = ON_THE_AIR_TV;
                 mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadTheAirTV(mPage);
                 break;
             default:
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    //TODO
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
     }
 }
