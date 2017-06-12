@@ -21,7 +21,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SearchActivity"/>
+            android:name=".ui.activity.SearchActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.framgia.movie06.ui.activity.HomeActivity"/>
+        </activity>
     </application>
 
 </manifest>
