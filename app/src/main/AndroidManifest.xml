@@ -20,12 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activity.SearchActivity">
+        <activity android:name=".ui.activity.SearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.framgia.movie06.ui.activity.HomeActivity"/>
         </activity>
+        <activity
+            android:name=".ui.activity.DetailActivity"
+            android:theme="@style/Detail.NoActionBar"/>
     </application>
 
 </manifest>

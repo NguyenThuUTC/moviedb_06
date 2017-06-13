@@ -23,6 +23,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.framgia.movie06.Constants.Constant.LOAD_ERROR;
+
 public class SearchActivity extends AppCompatActivity {
     public static final String SEARCH = "Search";
     private Retrofit mRetrofit;
@@ -31,7 +33,6 @@ public class SearchActivity extends AppCompatActivity {
     private List<Movie> mMovieList;
     private int mPage = 1;
     private int mTotalPage;
-    public static final String LOAD_ERROR = "error";
     private String mQuerySearch;
 
     @Override
