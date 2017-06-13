@@ -1,9 +1,11 @@
 package com.framgia.movie06.service;
 
+import com.framgia.movie06.data.model.CountriesCompaniesResponse;
 import com.framgia.movie06.data.model.GenresResponse;
 import com.framgia.movie06.data.model.MoviesResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -39,4 +41,8 @@ public interface MovieService {
 
     @GET("tv/on_the_air")
     Call<MoviesResponse> getTheAirTV(@Query("api_key") String apiKey, @Query("page") int page);
+
+    @GET("movie/{movie_id}")
+    Call<CountriesCompaniesResponse> getCompanyCountry(@Path("movie_id") int movieId,
+            @Query("api_key") String apiKey);
 }

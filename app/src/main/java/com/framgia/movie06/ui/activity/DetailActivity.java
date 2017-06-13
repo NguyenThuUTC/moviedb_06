@@ -11,14 +11,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.framgia.movie06.R;
+import com.framgia.movie06.data.model.CountriesCompaniesResponse;
 import com.framgia.movie06.data.model.Movie;
+import com.framgia.movie06.data.model.ProductionCompany;
+import com.framgia.movie06.data.model.ProductionCountry;
 import com.framgia.movie06.service.Config;
 import com.framgia.movie06.service.MovieService;
 import com.squareup.picasso.Picasso;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.framgia.movie06.Constants.Constant.HYPHEN;
+import static com.framgia.movie06.Constants.Constant.LOAD_ERROR;
 import static com.framgia.movie06.Constants.Constant.MAXIMUM_VOTE_POINT;
 import static com.framgia.movie06.Constants.Constant.SLASH;
 
@@ -34,6 +43,8 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mTextVoteCount;
     private TextView mTextOriginCountry;
     private TextView mTextProductionCompanis;
+    private TextView mTextTitleCountry;
+    private TextView mTextTitleCompany;
     private TextView mTextVoteAverage;
     private RatingBar mRatingVoteAverage;
     private LinearLayout mLinearTrailer;
@@ -58,6 +69,9 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         initViews();
+        getData();
+        loadProductCountries();
+        displayData();
     }
 
     private void initViews() {
@@ -75,6 +89,8 @@ public class DetailActivity extends AppCompatActivity {
         mTextVoteCount = (TextView) findViewById(R.id.text_vote_count);
         mTextOriginCountry = (TextView) findViewById(R.id.text_origin_country);
         mTextProductionCompanis = (TextView) findViewById(R.id.text_production_companis);
+        mTextTitleCompany = (TextView) findViewById(R.id.text_title_company);
+        mTextTitleCountry = (TextView) findViewById(R.id.text_title_country);
         mRecyclerViewCast = (RecyclerView) findViewById(R.id.recycler_cast);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerViewCast.setLayoutManager(layoutManager);
@@ -86,8 +102,8 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
         Bundle bundle = intent.getExtras();
-        movie = (Movie) bundle.getSerializable(BUNDLE_MOVIE);
-        genre = bundle.getString(BUNDLE_GENRE, "");
+        movie = (Movie) bundle.getSerializable(EXTRA_MOVIE);
+        genre = bundle.getString(EXTRA_GENRE, "");
     }
 
     private void displayData() {
@@ -110,8 +126,61 @@ public class DetailActivity extends AppCompatActivity {
 
         mTextVoteAverage.setText(movie.getVoteAverage() + SLASH + MAXIMUM_VOTE_POINT);
         mRatingVoteAverage.setRating(movie.getVoteAverage());
-        mTextVoteCount.setText(R.string.vote_count + movie.getVoteCount());
+        mTextVoteCount.setText(this.getString(R.string.vote_count) + movie.getVoteCount());
         mTextGenres.setText(genre);
         mTextOverView.setText(movie.getOverview());
+    }
+
+    private void loadProductCountries() {
+        mMovieService = mRetrofit.create(MovieService.class);
+        mMovieService.getCompanyCountry(movie.getId(), Config.API_KEY).
+                enqueue(new Callback<CountriesCompaniesResponse>() {
+                    @Override
+                    public void onResponse(Call<CountriesCompaniesResponse> call,
+                            Response<CountriesCompaniesResponse> response) {
+                        if (response == null || response.body() == null ||
+                                (response.body().getCountries() == null
+                                        && response.body().getCompanyies() == null)) {
+                            return;
+                        }
+                        if (response.body().getCountries() != null) {
+                            String textCountries = "";
+                            for (ProductionCountry country : response.body().getCountries()) {
+                                textCountries += country.getName() + HYPHEN;
+                            }
+                            if (textCountries.length() > 0) {
+                                textCountries =
+                                        textCountries.substring(0, textCountries.length() - 1);
+                            }
+                            mTextOriginCountry.setText(textCountries);
+                            mTextOriginCountry.setVisibility(View.VISIBLE);
+                            mTextTitleCountry.setVisibility(View.VISIBLE);
+                        } else {
+                            mTextOriginCountry.setVisibility(View.GONE);
+                            mTextTitleCountry.setVisibility(View.GONE);
+                        }
+                        if (response.body().getCompanyies() != null) {
+                            String textCompanies = "";
+                            for (ProductionCompany company : response.body().getCompanyies()) {
+                                textCompanies += company.getName() + HYPHEN;
+                            }
+                            if (textCompanies.length() > 0) {
+                                textCompanies =
+                                        textCompanies.substring(0, textCompanies.length() - 1);
+                            }
+                            mTextProductionCompanis.setText(textCompanies);
+                            mTextProductionCompanis.setVisibility(View.VISIBLE);
+                            mTextTitleCompany.setVisibility(View.VISIBLE);
+                        } else {
+                            mTextProductionCompanis.setVisibility(View.GONE);
+                            mTextTitleCompany.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CountriesCompaniesResponse> call, Throwable t) {
+                        Toast.makeText(DetailActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
