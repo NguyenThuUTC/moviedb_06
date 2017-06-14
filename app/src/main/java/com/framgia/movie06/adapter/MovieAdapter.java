@@ -16,7 +16,9 @@ import java.util.List;
 
 import static com.framgia.movie06.Constants.Constant.HYPHEN;
 import static com.framgia.movie06.Constants.Constant.MAXIMUM_VOTE_POINT;
+import static com.framgia.movie06.Constants.Constant.MOVIE;
 import static com.framgia.movie06.Constants.Constant.SLASH;
+import static com.framgia.movie06.Constants.Constant.TV;
 
 /**
  * Created by admin on 6/7/2017.
@@ -26,6 +28,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
     private List<Movie> mListMovie;
     private LayoutInflater mLayoutInflater;
     private DatabaseHelper mDatabaseHelper;
+    private int featureMovie;
 
     public MovieAdapter(List<Movie> listMovie) {
         this.mListMovie = listMovie;
@@ -77,6 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
                     .error(R.drawable.no_image)
                     .into(mImagePoster);
 
+            featureMovie = movie.getTitle() != null ? MOVIE : TV;
             String title = movie.getTitle() != null ? movie.getTitle()
                     : movie.getName() != null ? movie.getName() : null;
             mTextTitle.setText(title != null ? title : "");
@@ -111,7 +115,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
         public void onClick(View v) {
             if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClick(getAdapterPosition(), v,
-                        mListMovie.get(getAdapterPosition()), mTextGenres.getText().toString());
+                        mListMovie.get(getAdapterPosition()), mTextGenres.getText().toString(),
+                        featureMovie);
             }
         }
     }
@@ -121,6 +126,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position, View v, Movie movie, String genres);
+        void onItemClick(int position, View v, Movie movie, String genres, int featureMovie);
     }
 }

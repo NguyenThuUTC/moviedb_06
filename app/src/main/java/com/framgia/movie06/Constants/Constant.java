@@ -9,4 +9,6 @@ public class Constant {
     public static final String HYPHEN = "-";
     public static final String SLASH = "/";
     public static final int MAXIMUM_VOTE_POINT = 10;
+    public static final int MOVIE = 1;
+    public static final int TV = 2;
 }
