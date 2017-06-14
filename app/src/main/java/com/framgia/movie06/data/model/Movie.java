@@ -73,4 +73,8 @@ public class Movie implements Serializable {
     public String getOverview() {
         return mOverview;
     }
+
+    public String[] getOriginCountry() {
+        return originCountry;
+    }
 }

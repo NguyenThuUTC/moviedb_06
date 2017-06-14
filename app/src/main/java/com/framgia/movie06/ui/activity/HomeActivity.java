@@ -321,7 +321,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(int position, View v, Movie movie, String genres) {
-        startActivity(DetailActivity.getInstance(HomeActivity.this, movie, genres));
+    public void onItemClick(int position, View v, Movie movie, String genres, int featureMovie) {
+        startActivity(DetailActivity.getInstance(HomeActivity.this, movie, genres, featureMovie));
     }
 }

@@ -43,6 +43,10 @@ public interface MovieService {
     Call<MoviesResponse> getTheAirTV(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("movie/{movie_id}")
-    Call<CountriesCompaniesResponse> getCompanyCountry(@Path("movie_id") int movieId,
+    Call<CountriesCompaniesResponse> getCompanyCountryMovie(@Path("movie_id") int movieId,
+            @Query("api_key") String apiKey);
+
+    @GET("tv/{movie_id}")
+    Call<CountriesCompaniesResponse> getCompanyCountryTV(@Path("movie_id") int movieId,
             @Query("api_key") String apiKey);
 }
