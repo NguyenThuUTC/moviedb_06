@@ -29,6 +29,7 @@
             android:name=".ui.activity.DetailActivity"
             android:theme="@style/Detail.NoActionBar"/>
         <activity android:name=".ui.activity.TrailerActivity"/>
+        <activity android:name=".ui.activity.FavouriteActivity"/>
     </application>
 
 </manifest>

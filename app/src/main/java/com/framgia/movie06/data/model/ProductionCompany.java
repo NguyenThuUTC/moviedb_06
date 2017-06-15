@@ -7,11 +7,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ProductionCompany {
     @SerializedName("id")
-    private String mId;
+    private int mId;
     @SerializedName("name")
     private String mName;
 
-    public String getId() {
+    public int getId() {
         return mId;
     }
 

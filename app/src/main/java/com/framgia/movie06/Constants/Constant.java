@@ -11,4 +11,5 @@ public class Constant {
     public static final int MAXIMUM_VOTE_POINT = 10;
     public static final int MOVIE = 1;
     public static final int TV = 2;
+    public static final int FAVOURITE = 3;
 }
