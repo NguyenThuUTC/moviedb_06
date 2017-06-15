@@ -38,12 +38,10 @@ import static com.framgia.movie06.Constants.Constant.MAXIMUM_VOTE_POINT;
 import static com.framgia.movie06.Constants.Constant.MOVIE;
 import static com.framgia.movie06.Constants.Constant.SLASH;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_MOVIE = "com.framgia.movie06.EXTRA_MOVIE";
     public static final String EXTRA_GENRE = "com.framgia.movie06.EXTRA_GENRE";
     public static final String EXTRA_FEATURE_MOVIE = "com.framgia.movie06.EXTRA_FEATURE_MOVIE";
-    public static final String BUNDLE_MOVIE = "BUNDLE_MOVIE";
-    public static final String BUNDLE_GENRE = "BUNDLE_GENRE";
     private ImageView mImagePoster;
     private TextView mTextTitle;
     private TextView mTextGenres;
@@ -55,6 +53,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mTextTitleCompany;
     private TextView mTextVoteAverage;
     private TextView mTextTitleCast;
+    private ImageView mImageFavourite;
     private RatingBar mRatingVoteAverage;
     private LinearLayout mLinearTrailer;
     private TextView mTextOverView;
@@ -97,12 +96,19 @@ public class DetailActivity extends AppCompatActivity {
 
     private void loadCountriesTV() {
         String textCountry = "";
+        if (movie.getOriginCountry().length == 0) {
+            mTextTitleCountry.setVisibility(View.GONE);
+            mTextOriginCountry.setVisibility(View.GONE);
+            return;
+        }
         for (String country : movie.getOriginCountry()) {
             textCountry += country + HYPHEN;
         }
         if (textCountry.length() > 0) {
             textCountry = textCountry.substring(0, textCountry.length() - 1);
         }
+        mTextTitleCountry.setVisibility(View.VISIBLE);
+        mTextOriginCountry.setVisibility(View.VISIBLE);
         mTextOriginCountry.setText(textCountry);
     }
 
@@ -149,6 +155,7 @@ public class DetailActivity extends AppCompatActivity {
                 .build();
         mCastService = mRetrofit.create(CastService.class);
         mMovieService = mRetrofit.create(MovieService.class);
+        mLinearTrailer = (LinearLayout) findViewById(R.id.linear_trailer);
         mImagePoster = (ImageView) findViewById(R.id.image_poster);
         mTextTitle = (TextView) findViewById(R.id.text_title);
         mTextGenres = (TextView) findViewById(R.id.text_genre);
@@ -156,19 +163,21 @@ public class DetailActivity extends AppCompatActivity {
         mTextReleaseDate = (TextView) findViewById(R.id.text_release_date);
         mTextVoteAverage = (TextView) findViewById(R.id.text_vote_average);
         mRatingVoteAverage = (RatingBar) findViewById(R.id.rating_vote_average);
-        mLinearTrailer = (LinearLayout) findViewById(R.id.linear_trailer);
         mTextVoteCount = (TextView) findViewById(R.id.text_vote_count);
         mTextOriginCountry = (TextView) findViewById(R.id.text_origin_country);
         mTextProductionCompanis = (TextView) findViewById(R.id.text_production_companis);
         mTextTitleCompany = (TextView) findViewById(R.id.text_title_company);
         mTextTitleCountry = (TextView) findViewById(R.id.text_title_country);
         mTextTitleCast = (TextView) findViewById(R.id.text_title_cast);
+        mImageFavourite = (ImageView) findViewById(R.id.image_favourite);
         mCastList = new ArrayList<>();
         mCastAdapter = new CastAdapter(mCastList);
         mRecyclerViewCast = (RecyclerView) findViewById(R.id.recycler_cast);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerViewCast.setLayoutManager(layoutManager);
         mRecyclerViewCast.setAdapter(mCastAdapter);
+        mLinearTrailer.setOnClickListener(this);
+        mImageFavourite.setOnClickListener(this);
     }
 
     private void getData() {
@@ -278,5 +287,15 @@ public class DetailActivity extends AppCompatActivity {
             }
         };
         return castResponseCallback;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.linear_trailer) {
+            startActivity(TrailerActivity.getInstance(DetailActivity.this, movie, mFeatureMovie));
+        } else if (id == R.id.image_favourite) {
+
+        }
     }
 }
