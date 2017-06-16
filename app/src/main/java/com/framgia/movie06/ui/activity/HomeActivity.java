@@ -59,6 +59,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setTitle(R.string.nav_popular_movie);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -259,13 +260,13 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        // TODO: 6/6/2017
         switch (id) {
             case R.id.menu_favourite_movie:
                 Intent intent = new Intent(HomeActivity.this, FavouriteActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_popular_movie:
+                setTitle(R.string.nav_popular_movie);
                 mFeatureMovie = POPULAR_MOVIE;
                 mPage = 1;
                 mMovieList.clear();
@@ -273,6 +274,7 @@ public class HomeActivity extends AppCompatActivity
                 loadPopular(mPage);
                 break;
             case R.id.menu_now_playing_movie:
+                setTitle(R.string.nav_now_playing);
                 mFeatureMovie = NOW_PLAYING_MOVIE;
                 mPage = 1;
                 mMovieList.clear();
@@ -280,6 +282,7 @@ public class HomeActivity extends AppCompatActivity
                 loadNowPlaying(mPage);
                 break;
             case R.id.menu_upcoming_movie:
+                setTitle(R.string.nav_upcoming);
                 mFeatureMovie = UPCOMING_MOVIE;
                 mPage = 1;
                 mMovieList.clear();
@@ -287,6 +290,7 @@ public class HomeActivity extends AppCompatActivity
                 loadNowPlaying(mPage);
                 break;
             case R.id.menu_top_rated_movie:
+                setTitle(R.string.nav_top_rated_movie);
                 mFeatureMovie = TOP_RATED_MOVIE;
                 mPage = 1;
                 mMovieList.clear();
@@ -294,6 +298,7 @@ public class HomeActivity extends AppCompatActivity
                 loadTopRated(mPage);
                 break;
             case R.id.menu_popular_tv:
+                setTitle(R.string.nav_popular_tv);
                 mFeatureMovie = POPULAR_TV;
                 mPage = 1;
                 mMovieList.clear();
@@ -301,6 +306,7 @@ public class HomeActivity extends AppCompatActivity
                 loadPopularTV(mPage);
                 break;
             case R.id.menu_top_rated_tv:
+                setTitle(R.string.nav_top_rated_tv);
                 mFeatureMovie = TOP_RATED_TV;
                 mPage = 1;
                 mMovieList.clear();
@@ -308,6 +314,7 @@ public class HomeActivity extends AppCompatActivity
                 loadTopRatedTV(mPage);
                 break;
             case R.id.menu_on_the_air_tv:
+                setTitle(R.string.nav_the_air_tv);
                 mFeatureMovie = ON_THE_AIR_TV;
                 mPage = 1;
                 mMovieList.clear();
