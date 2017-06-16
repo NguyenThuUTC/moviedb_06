@@ -49,4 +49,8 @@ public interface MovieService {
     @GET("tv/{movie_id}")
     Call<CountriesCompaniesResponse> getCompanyCountryTV(@Path("movie_id") int movieId,
             @Query("api_key") String apiKey);
+
+    @GET("genre/{genre_id}/movies")
+    Call<MoviesResponse> getMovieByGenre(@Path("genre_id") int genreId,
+            @Query("api_key") String apiKey);
 }

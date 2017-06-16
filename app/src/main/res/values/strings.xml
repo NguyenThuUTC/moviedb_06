@@ -26,4 +26,9 @@
     <string name="vote_count">Vote count&#58; </string>
     <string name="my_favourite">My Favourite</string>
     <string name="title_search">Search</string>
+    <string name="action">Action</string>
+    <string name="adventure">Adventure</string>
+    <string name="family">Family</string>
+    <string name="science_fiction">Science Fiction</string>
+    <string name="title_load_by_genre">Load By Genre</string>
 </resources>
