@@ -346,7 +346,8 @@ public class HomeActivity extends AppCompatActivity
                 loadTheAirTV(mPage);
                 break;
             case R.id.menu_action_genre:
-                setTitle(R.string.title_load_by_genre + R.string.action);
+                setTitle(this.getString(R.string.title_load_by_genre) + " " + this.getString(
+                        R.string.action));
                 mFeatureMovie = ACTION_GENRE;
                 mPage = 1;
                 mMovieList.clear();
@@ -354,7 +355,8 @@ public class HomeActivity extends AppCompatActivity
                 loadMovieByGenre(mPage, ACTION);
                 break;
             case R.id.menu_adventure_genre:
-                setTitle(R.string.title_load_by_genre + R.string.adventure);
+                setTitle(this.getString(R.string.title_load_by_genre) + " " + this.getString(
+                        R.string.adventure));
                 mFeatureMovie = ADVENTURE_GENRE;
                 mPage = 1;
                 mMovieList.clear();
@@ -362,7 +364,8 @@ public class HomeActivity extends AppCompatActivity
                 loadMovieByGenre(mPage, ADVENTURE);
                 break;
             case R.id.menu_family_genre:
-                setTitle(R.string.title_load_by_genre + R.string.family);
+                setTitle(this.getString(R.string.title_load_by_genre) + " " + this.getString(
+                        R.string.family));
                 mFeatureMovie = FAMILY_GENRE;
                 mPage = 1;
                 mMovieList.clear();
@@ -370,7 +373,8 @@ public class HomeActivity extends AppCompatActivity
                 loadMovieByGenre(mPage, FAMILY);
                 break;
             case R.id.menu_science_fiction_genre:
-                setTitle(R.string.title_load_by_genre + R.string.science_fiction);
+                setTitle(this.getString(R.string.title_load_by_genre) + " " + this.getString(
+                        R.string.science_fiction));
                 mFeatureMovie = SCIENCE_FICTION_GENRE;
                 mPage = 1;
                 mMovieList.clear();
