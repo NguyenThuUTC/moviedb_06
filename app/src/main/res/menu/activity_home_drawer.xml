@@ -27,7 +27,7 @@
             android:id="@+id/menu_on_the_air_tv"
             android:title="@string/nav_the_air_tv"/>
     </group>
-    <item android:title="Genres">
+    <item android:title="@string/genres">
         <menu>
             <item
                 android:id="@+id/menu_action_genre"
