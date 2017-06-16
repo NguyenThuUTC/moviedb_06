@@ -32,7 +32,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.framgia.movie06.Constants.Constant.ACTION;
+import static com.framgia.movie06.Constants.Constant.ADVENTURE;
+import static com.framgia.movie06.Constants.Constant.FAMILY;
 import static com.framgia.movie06.Constants.Constant.LOAD_ERROR;
+import static com.framgia.movie06.Constants.Constant.SCIENCE_FICTION;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -44,6 +48,10 @@ public class HomeActivity extends AppCompatActivity
     public static final int POPULAR_TV = 5;
     public static final int TOP_RATED_TV = 6;
     public static final int ON_THE_AIR_TV = 7;
+    public static final int ACTION_GENRE = 8;
+    public static final int ADVENTURE_GENRE = 9;
+    public static final int FAMILY_GENRE = 10;
+    public static final int SCIENCE_FICTION_GENRE = 11;
     private DrawerLayout mDrawerLayout;
     private RecyclerView mRecyclerMovies;
     private MovieAdapter mMovieAdapter;
@@ -174,6 +182,18 @@ public class HomeActivity extends AppCompatActivity
                     case ON_THE_AIR_TV:
                         loadTheAirTV(mPage);
                         break;
+                    case ACTION_GENRE:
+                        loadMovieByGenre(mPage, ACTION);
+                        break;
+                    case ADVENTURE_GENRE:
+                        loadMovieByGenre(mPage, ADVENTURE);
+                        break;
+                    case FAMILY_GENRE:
+                        loadMovieByGenre(mPage, FAMILY);
+                        break;
+                    case SCIENCE_FICTION_GENRE:
+                        loadMovieByGenre(mPage, SCIENCE_FICTION);
+                        break;
                     default:
                         break;
                 }
@@ -229,6 +249,10 @@ public class HomeActivity extends AppCompatActivity
 
     private void loadTheAirTV(int page) {
         mMovieService.getTheAirTV(Config.API_KEY, page).enqueue(mDataCallBack());
+    }
+
+    private void loadMovieByGenre(int mPage, int idGenre) {
+        mMovieService.getMovieByGenre(idGenre, Config.API_KEY).enqueue(mDataCallBack());
     }
 
     @Override
@@ -320,6 +344,38 @@ public class HomeActivity extends AppCompatActivity
                 mMovieList.clear();
                 mMovieAdapter.notifyDataSetChanged();
                 loadTheAirTV(mPage);
+                break;
+            case R.id.menu_action_genre:
+                setTitle(R.string.title_load_by_genre + R.string.action);
+                mFeatureMovie = ACTION_GENRE;
+                mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadMovieByGenre(mPage, ACTION);
+                break;
+            case R.id.menu_adventure_genre:
+                setTitle(R.string.title_load_by_genre + R.string.adventure);
+                mFeatureMovie = ADVENTURE_GENRE;
+                mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadMovieByGenre(mPage, ADVENTURE);
+                break;
+            case R.id.menu_family_genre:
+                setTitle(R.string.title_load_by_genre + R.string.family);
+                mFeatureMovie = FAMILY_GENRE;
+                mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadMovieByGenre(mPage, FAMILY);
+                break;
+            case R.id.menu_science_fiction_genre:
+                setTitle(R.string.title_load_by_genre + R.string.science_fiction);
+                mFeatureMovie = SCIENCE_FICTION_GENRE;
+                mPage = 1;
+                mMovieList.clear();
+                mMovieAdapter.notifyDataSetChanged();
+                loadMovieByGenre(mPage, SCIENCE_FICTION);
                 break;
             default:
                 break;
