@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import com.framgia.movie06.R;
 import com.framgia.movie06.adapter.MovieAdapter;
@@ -25,8 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.framgia.movie06.Constants.Constant.LOAD_ERROR;
 
-public class SearchActivity extends AppCompatActivity {
-    public static final String SEARCH = "Search";
+public class SearchActivity extends AppCompatActivity implements MovieAdapter.OnItemClickListener {
     private Retrofit mRetrofit;
     private SearchService mSearchService;
     private MovieAdapter mMovieAdapter;
@@ -39,9 +39,17 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        setTitle(SEARCH);
+        setTitle(R.string.title_search);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initViews();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initViews() {
@@ -63,6 +71,7 @@ public class SearchActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search, menu);
         MenuItem item = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setIconified(false);
         searchView.setOnQueryTextListener(mTextChanged);
         return super.onCreateOptionsMenu(menu);
     }
@@ -125,5 +134,10 @@ public class SearchActivity extends AppCompatActivity {
                         Toast.makeText(SearchActivity.this, LOAD_ERROR, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    public void onItemClick(int position, View v, Movie movie, String genres, int featureMovie) {
+        startActivity(DetailActivity.getInstance(SearchActivity.this, movie, genres, featureMovie));
     }
 }

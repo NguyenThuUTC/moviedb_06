@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +26,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.framgia.movie06.Constants.Constant.FAVOURITE;
 import static com.framgia.movie06.Constants.Constant.LOAD_ERROR;
 import static com.framgia.movie06.Constants.Constant.MOVIE;
+import static com.framgia.movie06.Constants.Constant.TV;
 
 public class TrailerActivity extends AppCompatActivity
         implements TrailerAdapter.OnItemTrailerClickListener {
@@ -56,14 +59,36 @@ public class TrailerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trailer);
+        setTitle(R.string.trailer);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initViews();
         getData();
         displayData();
-        if (mFeatureMovie == MOVIE) {
-            loadTrailerMovie();
-        } else {
-            loadTrailerTV();
+        switch (mFeatureMovie) {
+            case MOVIE:
+                loadTrailerMovie();
+                break;
+            case TV:
+                loadTrailerTV();
+                break;
+            case FAVOURITE:
+                if (mMovie.getTitle() != null) {
+                    loadTrailerMovie();
+                } else {
+                    loadTrailerTV();
+                }
+                break;
+            default:
+                break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadTrailerTV() {
