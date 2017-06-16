@@ -13,7 +13,14 @@ public class Cast {
     @SerializedName("name")
     private String mName;
     @SerializedName("profile_path")
-    private String mProfile_path;
+    private String mProfilePath;
+
+    public Cast(int id, String character, String name, String profilePath) {
+        mId = id;
+        mCharacter = character;
+        mName = name;
+        mProfilePath = profilePath;
+    }
 
     public int getId() {
         return mId;
@@ -27,7 +34,7 @@ public class Cast {
         return mName;
     }
 
-    public String getProfile_path() {
-        return mProfile_path;
+    public String getProfilePath() {
+        return mProfilePath;
     }
 }

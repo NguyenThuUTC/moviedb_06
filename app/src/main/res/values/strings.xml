@@ -16,6 +16,7 @@
     <string name="search_history">Search history</string>
     <string name="trailer">Trailer</string>
     <string name="no_trailer_result">The movie have no trailer </string>
+    <string name="no_data">No data </string>
     <string name="cast">Casts</string>
     <string name="origin_country">Origin country</string>
     <string name="production_companis">Production companis</string>
@@ -23,4 +24,5 @@
     <string name="overview">Overview</string>
     <string name="others">Others</string>
     <string name="vote_count">Vote count&#58; </string>
+    <string name="my_favourite">My Favourite</string>
 </resources>

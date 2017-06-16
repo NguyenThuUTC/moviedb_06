@@ -59,7 +59,7 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.RecyclerViewHo
 
         private void bindData(Cast cast) {
             Picasso.with(mLayoutInflater.getContext())
-                    .load(Config.POSTER_URL + cast.getProfile_path())
+                    .load(Config.POSTER_URL + cast.getProfilePath())
                     .error(R.drawable.no_image)
                     .into(mImageProfile);
             mTextCharacter.setText(cast.getCharacter());

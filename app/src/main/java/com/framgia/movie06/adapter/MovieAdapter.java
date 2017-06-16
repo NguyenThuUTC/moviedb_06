@@ -102,7 +102,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.RecyclerView
                     textGenre += mDatabaseHelper.getNameGenre(id) + HYPHEN;
                 }
                 textGenre = textGenre.substring(0, textGenre.length() - 1);
+            } else {
+                List<Integer> list = mDatabaseHelper.getIdGenreMovie(movie.getId());
+                if (list != null && list.size() > 0) {
+                    for (int id : list) {
+                        textGenre += mDatabaseHelper.getNameGenre(id) + HYPHEN;
+                    }
+                    textGenre = textGenre.substring(0, textGenre.length() - 1);
+                }
             }
+
             if (textGenre.equals("")) {
                 mTextGenres.setVisibility(View.GONE);
             } else {

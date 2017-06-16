@@ -14,7 +14,7 @@ public class Movie implements Serializable {
     @SerializedName("name")
     private String mName;
     @SerializedName("origin_country")
-    private String[] originCountry;
+    private String[] mOriginCountry;
     @SerializedName("poster_path")
     private String mPosterPath;
     @SerializedName("release_date")
@@ -29,6 +29,24 @@ public class Movie implements Serializable {
     private float mVoteAverage;
     @SerializedName("overview")
     private String mOverview;
+
+    public Movie() {
+    }
+
+    public Movie(int id, String title, String name, String[] originCountry, String posterPath,
+            String releaseDate, String firstAirDate, int voteCount, float voteAverage,
+            String overview) {
+        mId = id;
+        mTitle = title;
+        mName = name;
+        mOriginCountry = originCountry;
+        mPosterPath = posterPath;
+        mReleaseDate = releaseDate;
+        mFirstAirDate = firstAirDate;
+        mVoteCount = voteCount;
+        mVoteAverage = voteAverage;
+        mOverview = overview;
+    }
 
     public int getId() {
         return mId;
@@ -75,6 +93,6 @@ public class Movie implements Serializable {
     }
 
     public String[] getOriginCountry() {
-        return originCountry;
+        return mOriginCountry;
     }
 }

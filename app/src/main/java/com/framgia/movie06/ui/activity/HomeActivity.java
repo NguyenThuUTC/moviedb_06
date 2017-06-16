@@ -79,7 +79,6 @@ public class HomeActivity extends AppCompatActivity
                 .build();
         mMovieService = mRetrofit.create(MovieService.class);
         mMovieList = new ArrayList<>();
-        List<Genre> l = mDatabaseHelper.getAllGenre();
         if (mDatabaseHelper.getAllGenre() == null) {
             insertDataForGenreTable();
         }
@@ -105,7 +104,7 @@ public class HomeActivity extends AppCompatActivity
                     if (mDatabaseHelper.getNameGenre(genre.getId()) != null) {
                         continue;
                     }
-                    mDatabaseHelper.insertData(genre);
+                    mDatabaseHelper.insertDataGenre(genre);
                 }
             }
 
@@ -125,7 +124,7 @@ public class HomeActivity extends AppCompatActivity
                     if (mDatabaseHelper.getNameGenre(genre.getId()) != null) {
                         continue;
                     }
-                    mDatabaseHelper.insertData(genre);
+                    mDatabaseHelper.insertDataGenre(genre);
                 }
             }
 
@@ -263,6 +262,8 @@ public class HomeActivity extends AppCompatActivity
         // TODO: 6/6/2017
         switch (id) {
             case R.id.menu_favourite_movie:
+                Intent intent = new Intent(HomeActivity.this, FavouriteActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_popular_movie:
                 mFeatureMovie = POPULAR_MOVIE;
